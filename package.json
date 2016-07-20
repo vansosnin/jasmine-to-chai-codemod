@@ -1,0 +1,29 @@
+{
+  "name": "jasmine-to-chai-codemod",
+  "version": "0.0.1",
+  "description": "JSCodeShift codemod to migrate tests from Jasmine to Chai sytax",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vansosnin/jasmine-to-chai-codemod.git"
+  },
+  "keywords": [
+    "js",
+    "javascript",
+    "codemod",
+    "jscodeshift",
+    "ast",
+    "jasmine",
+    "chai",
+    "mocha"
+  ],
+  "author": "Ivan Sosnin <vansosnin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vansosnin/jasmine-to-chai-codemod/issues"
+  },
+  "homepage": "https://github.com/vansosnin/jasmine-to-chai-codemod#readme"
+}
