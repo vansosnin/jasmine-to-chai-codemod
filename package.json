@@ -4,11 +4,11 @@
   "description": "JSCodeShift codemod to migrate tests from Jasmine to Chai sytax",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": ""
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vansosnin/jasmine-to-chai-codemod.git"
+    "url": "https://github.com/vansosnin/jasmine-to-chai-codemod"
   },
   "keywords": [
     "js",
