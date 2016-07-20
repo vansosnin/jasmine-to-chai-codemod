@@ -2,7 +2,6 @@
   "name": "jasmine-to-chai-codemod",
   "version": "0.0.1",
   "description": "JSCodeShift codemod to migrate tests from Jasmine to Chai sytax",
-  "main": "index.js",
   "scripts": {
     "test": ""
   },

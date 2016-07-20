@@ -7,11 +7,11 @@ export default function transformer(file, api) {
     const importExpectChaiDeclarations = root.find(j.ImportDeclaration, {
         specifiers: [{
             local: {
-                name: "expect"
+                name: 'expect'
             }
         }],
         source: {
-            value: "chai"
+            value: 'chai'
         }
     });
     const hasImportExpectChai = importExpectChaiDeclarations.__paths.length > 0;
@@ -20,7 +20,7 @@ export default function transformer(file, api) {
         .find(j.Program)
         .replaceWith(p => {
             if (!hasImportExpectChai) {
-                p.value.body.unshift('import { expect } from "chai";');
+                p.value.body.unshift("import { expect } from 'chai';");
             }
             return p.value;
         })
@@ -34,7 +34,7 @@ export default function transformer(file, api) {
                         type: j.CallExpression.name,
                         callee: {
                             type: j.Identifier.name,
-                            name: "expect"
+                            name: 'expect'
                         }
                     }
                 }
