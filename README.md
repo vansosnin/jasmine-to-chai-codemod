@@ -21,9 +21,11 @@ For more info see [jscodeshift] documentation.
 
 ## Try it
 
+* [Import 'expect' sandbox]
 * [Base transforms sandbox]
 * [Functions transforms sandbox]
 
 [jscodeshift]: https://github.com/facebook/jscodeshift
-[Base transforms sandbox]: https://astexplorer.net/#/iJTkqcTYBm/13
+[Import 'expect' sandbox]: https://astexplorer.net/#/6H6ni4KCey
+[Base transforms sandbox]: https://astexplorer.net/#/iJTkqcTYBm/15
 [Functions transforms sandbox]: https://astexplorer.net/#/zIASXvr2Za
