@@ -28,4 +28,4 @@ For more info see [jscodeshift] documentation.
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [Import 'expect' sandbox]: https://astexplorer.net/#/6H6ni4KCey
 [Base transforms sandbox]: https://astexplorer.net/#/iJTkqcTYBm/15
-[Functions transforms sandbox]: https://astexplorer.net/#/zIASXvr2Za
+[Functions transforms sandbox]: https://astexplorer.net/#/zIASXvr2Za/1

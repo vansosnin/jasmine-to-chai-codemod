@@ -16,7 +16,7 @@ export default function transformer(file, api) {
                         return 'to.contain';
 
                     default:
-                        return p.value.name;
+                        return p.value;
                 }
             }
         )
