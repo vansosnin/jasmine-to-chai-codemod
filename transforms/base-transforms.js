@@ -27,9 +27,9 @@ export default function transformer(file, api) {
 
                 switch(p.value.expression.callee.property.name) {
                     case 'toBeFalsy':
-                        return statement`expect(${expectArg}).to.be.false;`;
+                        return statement`expect(${expectArg}).not.to.be.ok;`;
                     case 'toBeTruthy':
-                        return statement`expect(${expectArg}).to.be.true;`;
+                        return statement`expect(${expectArg}).to.be.ok;`;
                     case 'toBeUndefined':
                         return statement`expect(${expectArg}).to.be.undefined;`;
                     case 'toBeDefined':
