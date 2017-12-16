@@ -20,12 +20,13 @@ export default function transformer(file, api) {
         })
         .replaceWith(
             p => {
-                const [expectArg] = p.value.expression.callee.object.arguments
-                    ? p.value.expression.callee.object.arguments
-                    : p.value.expression.callee.object.object.arguments;
-                const [chainArg] = p.value.expression.arguments;
+                const fnCall = p.value.expression;
+                const [expectArg] = fnCall.callee.object.arguments
+                    ? fnCall.callee.object.arguments
+                    : fnCall.callee.object.object.arguments;
+                const [chainArg] = fnCall.arguments;
 
-                switch(p.value.expression.callee.property.name) {
+                switch(fnCall.callee.property.name) {
                     case 'toBeFalsy':
                         return statement`expect(${expectArg}).not.to.be.ok;`;
                     case 'toBeTruthy':
