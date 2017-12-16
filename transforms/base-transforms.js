@@ -24,7 +24,6 @@ export default function transformer(file, api) {
                 const [expectArg] = fnCall.callee.object.arguments
                     ? fnCall.callee.object.arguments
                     : fnCall.callee.object.object.arguments;
-                const [chainArg] = fnCall.arguments;
 
                 switch(fnCall.callee.property.name) {
                     case 'toBeFalsy':
@@ -39,6 +38,7 @@ export default function transformer(file, api) {
                         return statement`expect(${expectArg}).to.be.null;`;
                     case 'toThrow':
                     case 'toThrowError':
+                        const [chainArg] = fnCall.arguments;
                         if (!chainArg) {
                             return statement`expect(${expectArg}).to.throw(Error);`;
                         } else if (chainArg.type === j.Literal.name) {
