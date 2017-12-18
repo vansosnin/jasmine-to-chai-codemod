@@ -1,4 +1,18 @@
 describe("Base transforms", function() {
+    it("handles truthy and falsy", function() {
+        expect("").toBeFalsy();
+        expect(1).toBeTruthy();
+    });
+
+    it("handles undefined", function() {
+        expect(undefined).toBeUndefined();
+        expect("Hello").toBeDefined();
+    });
+
+    it("handles null", function() {
+        expect(null).toBeNull();
+    });
+
     it("handles toThrowError()", function() {
         expect(myFunc).toThrow();
         expect(myFunc).toThrow("Error message");
