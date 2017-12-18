@@ -36,7 +36,17 @@ export default function transformer(file, api) {
                 case 'toBeNull':
                     return statement`expect(${expectArg}).to.be.null;`;
                 case 'toThrow':
+                    // toThrow()                          -> to.throw()                   (!!)
+                    // toThrow("msg")                     -> to.throw("msg")
+                    // toThrow(TypeError)                 -> to.throw(TypeError)
+                    // toThrow(new TypeError("msg"))      -> to.throw(TypeError, "msg")
+                    return transformThrow(expectArg, fnCall.arguments) || node;
                 case 'toThrowError':
+                    // toThrowError()                     -> to.throw(Error)              (!!)
+                    // toThrowError("msg")                -> to.throw("msg")
+                    // toThrowError(TypeError)            -> to.throw(TypeError)
+                    // toThrowError(new TypeError("msg")) -> to.throw(TypeError, "msg")
+                    // toThrowError(TypeError, "msg")     -> to.throw(TypeError, "msg")   (!!)
                     return transformThrow(expectArg, fnCall.arguments) || node;
                 default:
                     return node;
