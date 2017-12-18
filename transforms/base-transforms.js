@@ -57,8 +57,7 @@ export default function transformer(file, api) {
     function toThrowArgs([arg]) {
         if (!arg) {
             return [];
-        }
-        else {
+        } else {
             return singleThrowArg(arg);
         }
     }
