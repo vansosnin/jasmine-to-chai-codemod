@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "JSCodeShift codemod to migrate tests from Jasmine to Chai sytax",
   "scripts": {
-    "test": ""
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,20 @@
   "bugs": {
     "url": "https://github.com/vansosnin/jasmine-to-chai-codemod/issues"
   },
-  "homepage": "https://github.com/vansosnin/jasmine-to-chai-codemod#readme"
+  "homepage": "https://github.com/vansosnin/jasmine-to-chai-codemod#readme",
+  "devDependencies": {
+    "babel-jest": "^22.0.0",
+    "babel-preset-es2015": "^6.24.1",
+    "jest": "^21.2.1",
+    "jscodeshift": "^0.4.0"
+  },
+  "jest": {
+    "globals": {
+      "baseDir": "."
+    },
+    "testEnvironment": "node",
+    "roots": [
+      "transforms"
+    ]
+  }
 }
