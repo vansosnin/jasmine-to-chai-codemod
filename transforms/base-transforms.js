@@ -38,22 +38,24 @@ export default function transformer(file, api) {
                         return statement`expect(${expectArg}).to.be.null;`;
                     case 'toThrow':
                     case 'toThrowError':
-                        const [chainArg] = fnCall.arguments;
-                        if (!chainArg) {
-                            return statement`expect(${expectArg}).to.throw(Error);`;
-                        } else if (chainArg.type === j.Literal.name) {
-                            return statement`expect(${expectArg}).to.throw(Error, ${chainArg});`;
-                        } else if (chainArg.type === j.NewExpression.name) {
-                            const [innerArg] = chainArg.arguments;
-                            const errorType = chainArg.callee;
-                            return statement`expect(${expectArg}).to.throw(${errorType}, ${innerArg});`;
-                        }
-                        return p.value;
-
+                        return transformThrow(expectArg, fnCall.arguments) || p.value;
                     default:
                         return p.value;
                 }
             }
         )
         .toSource();
+
+    function transformThrow(expectArg, [throwArg]) {
+        if (!throwArg) {
+            return statement`expect(${expectArg}).to.throw(Error);`;
+        } else if (throwArg.type === j.Literal.name) {
+            return statement`expect(${expectArg}).to.throw(Error, ${throwArg});`;
+        } else if (throwArg.type === j.NewExpression.name) {
+            const [innerArg] = throwArg.arguments;
+            const errorType = throwArg.callee;
+            return statement`expect(${expectArg}).to.throw(${errorType}, ${innerArg});`;
+        }
+        return undefined;
+    }
 };
