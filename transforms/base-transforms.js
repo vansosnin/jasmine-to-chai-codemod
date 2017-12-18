@@ -18,32 +18,30 @@ export default function transformer(file, api) {
                 }
             }
         })
-        .replaceWith(
-            p => {
-                const fnCall = p.value.expression;
-                const [expectArg] = fnCall.callee.object.arguments
-                    ? fnCall.callee.object.arguments
-                    : fnCall.callee.object.object.arguments;
+        .replaceWith(p => {
+            const fnCall = p.value.expression;
+            const [expectArg] = fnCall.callee.object.arguments
+                ? fnCall.callee.object.arguments
+                : fnCall.callee.object.object.arguments;
 
-                switch(fnCall.callee.property.name) {
-                    case 'toBeFalsy':
-                        return statement`expect(${expectArg}).not.to.be.ok;`;
-                    case 'toBeTruthy':
-                        return statement`expect(${expectArg}).to.be.ok;`;
-                    case 'toBeUndefined':
-                        return statement`expect(${expectArg}).to.be.undefined;`;
-                    case 'toBeDefined':
-                        return statement`expect(${expectArg}).to.not.be.undefined;`;
-                    case 'toBeNull':
-                        return statement`expect(${expectArg}).to.be.null;`;
-                    case 'toThrow':
-                    case 'toThrowError':
-                        return transformThrow(expectArg, fnCall.arguments) || p.value;
-                    default:
-                        return p.value;
-                }
+            switch(fnCall.callee.property.name) {
+                case 'toBeFalsy':
+                    return statement`expect(${expectArg}).not.to.be.ok;`;
+                case 'toBeTruthy':
+                    return statement`expect(${expectArg}).to.be.ok;`;
+                case 'toBeUndefined':
+                    return statement`expect(${expectArg}).to.be.undefined;`;
+                case 'toBeDefined':
+                    return statement`expect(${expectArg}).to.not.be.undefined;`;
+                case 'toBeNull':
+                    return statement`expect(${expectArg}).to.be.null;`;
+                case 'toThrow':
+                case 'toThrowError':
+                    return transformThrow(expectArg, fnCall.arguments) || p.value;
+                default:
+                    return p.value;
             }
-        )
+        })
         .toSource();
 
     function transformThrow(expectArg, [throwArg]) {
