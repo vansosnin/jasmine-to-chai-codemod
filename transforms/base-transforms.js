@@ -18,8 +18,8 @@ export default function transformer(file, api) {
                 }
             }
         })
-        .replaceWith(p => {
-            const fnCall = p.value.expression;
+        .replaceWith(({value: node}) => {
+            const fnCall = node.expression;
             const [expectArg] = fnCall.callee.object.arguments
                 ? fnCall.callee.object.arguments
                 : fnCall.callee.object.object.arguments;
@@ -37,9 +37,9 @@ export default function transformer(file, api) {
                     return statement`expect(${expectArg}).to.be.null;`;
                 case 'toThrow':
                 case 'toThrowError':
-                    return transformThrow(expectArg, fnCall.arguments) || p.value;
+                    return transformThrow(expectArg, fnCall.arguments) || node;
                 default:
-                    return p.value;
+                    return node;
             }
         })
         .toSource();
