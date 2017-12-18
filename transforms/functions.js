@@ -4,8 +4,8 @@ export default function transformer(file, api) {
     return j(file.source)
         .find(j.Identifier)
         .replaceWith(
-            p => {
-                switch (p.value.name) {
+            ({value: node}) => {
+                switch (node.name) {
                     case 'toBe':
                         return 'to.equal';
                     case 'toEqual':
@@ -16,7 +16,7 @@ export default function transformer(file, api) {
                         return 'to.contain';
 
                     default:
-                        return p.value;
+                        return node;
                 }
             }
         )

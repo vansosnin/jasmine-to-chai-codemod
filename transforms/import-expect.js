@@ -18,11 +18,11 @@ export default function transformer(file, api) {
 
     return root
         .find(j.Program)
-        .replaceWith(p => {
+        .replaceWith(({value: node}) => {
             if (!hasImportExpectChai) {
-                p.value.body.unshift("import { expect } from 'chai';");
+                node.body.unshift("import { expect } from 'chai';");
             }
-            return p.value;
+            return node;
         })
         .toSource();
 };
