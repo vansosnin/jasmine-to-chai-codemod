@@ -9,6 +9,8 @@ describe("Base transforms", function() {
     it("handles undefined", function() {
         expect(undefined).toBeUndefined();
         expect("Hello").toBeDefined();
+        expect(1234567).not.toBeUndefined();
+        expect(undefined).not.toBeDefined();
     });
 
     it("handles null", function() {

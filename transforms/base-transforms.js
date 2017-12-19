@@ -68,9 +68,9 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeTruthy':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.ok;`;
             case 'toBeUndefined':
-                return statement`expect(${expectArg}).to.be.undefined;`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.be.undefined;`;
             case 'toBeDefined':
-                return statement`expect(${expectArg}).to.not.be.undefined;`;
+                return statement`expect(${expectArg}).${maybeNot(!to)}.be.undefined;`;
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toThrow':
