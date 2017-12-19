@@ -22,10 +22,8 @@ For more info see [jscodeshift] documentation.
 ## Try it
 
 * [Import 'expect' sandbox]
-* [Base transforms sandbox]
-* [Functions transforms sandbox]
+* [Assertions sandbox]
 
 [jscodeshift]: https://github.com/facebook/jscodeshift
-[Import 'expect' sandbox]: https://astexplorer.net/#/6H6ni4KCey
-[Base transforms sandbox]: https://astexplorer.net/#/iJTkqcTYBm/15
-[Functions transforms sandbox]: https://astexplorer.net/#/zIASXvr2Za/1
+[Import 'expect' sandbox]: https://astexplorer.net/#/gist/3f2de7f7a4e3b6c16fd3e21256332bbc/fa4054baca48de14f0ba8e49dd8b8fdeb17dc3a5
+[Assertions sandbox]: https://astexplorer.net/#/gist/bb80fb0d9fca0241d91daccd83ea9b84/f249827b96989b208f233a50b752171fd5e4078a
