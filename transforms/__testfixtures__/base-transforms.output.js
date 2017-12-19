@@ -1,4 +1,9 @@
 describe("Base transforms", function() {
+    it("does not transform assertions that aren't connected to expect()", function() {
+        hopefor("foo").toBe("foo");
+        hopefor("foo").not.toBe("bar");
+    });
+
     it("handles truthy and falsy", function() {
         expect("").not.to.be.ok;
         expect(1).to.be.ok;
@@ -16,6 +21,29 @@ describe("Base transforms", function() {
     it("handles null", function() {
         expect(null).to.be.null;
         expect(1234).not.to.be.null;
+    });
+
+    it("handles toBe()", function() {
+        expect(foo).to.equal(1);
+        expect(foo).not.to.equal(2);
+    });
+
+    it("handles toEqual()", function() {
+        expect(foo).to.deep.equal({foo: "bar"});
+        expect(foo).not.to.deep.equal({foo: "baz"});
+    });
+
+    it("handles toMatch()", function() {
+        expect("Hello world").to.match(/Hello/);
+        expect("Goodbye").not.to.match(/Hello/);
+    });
+
+    it("handles toContain()", function() {
+        expect([1, 2, 3]).to.contain(2);
+        expect([1, 2, 3]).not.to.contain(4);
+
+        expect("Hello world!").to.contain("world");
+        expect("Hello world!").not.to.contain("Goodbye");
     });
 
     it("handles toThrowError()", function() {

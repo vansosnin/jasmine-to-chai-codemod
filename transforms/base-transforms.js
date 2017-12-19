@@ -72,6 +72,14 @@ export default function transformer(file, {jscodeshift: j}) {
                 return statement`expect(${expectArg}).${maybeNot(!to)}.be.undefined;`;
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
+            case 'toBe':
+                return statement`expect(${expectArg}).${maybeNot(to)}.equal(${fnCall.arguments[0]});`;
+            case 'toEqual':
+                return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${fnCall.arguments[0]});`;
+            case 'toMatch':
+                return statement`expect(${expectArg}).${maybeNot(to)}.match(${fnCall.arguments[0]});`;
+            case 'toContain':
+                return statement`expect(${expectArg}).${maybeNot(to)}.contain(${fnCall.arguments[0]});`;
             case 'toThrow':
                 // toThrow()                          -> to.throw()                   (!!)
                 // toThrow("msg")                     -> to.throw("msg")
