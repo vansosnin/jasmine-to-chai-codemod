@@ -46,8 +46,7 @@ export default function transformer(file, {jscodeshift: j}) {
             const fnCall = node.expression;
             if (isExpect(node)) {
                 return transformExpect(fnCall, fnCall.callee.object.arguments, {to: true})
-            }
-            else {
+            } else {
                 return transformExpect(fnCall, fnCall.callee.object.object.arguments, {to: false})
             }
         })
