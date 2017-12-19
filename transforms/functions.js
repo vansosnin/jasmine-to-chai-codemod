@@ -1,6 +1,4 @@
-export default function transformer(file, api) {
-    const j = api.jscodeshift;
-
+export default function transformer(file, {jscodeshift: j}) {
     return j(file.source)
         .find(j.Identifier)
         .replaceWith(({value: node}) => {
