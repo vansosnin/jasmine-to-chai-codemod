@@ -1,4 +1,4 @@
-describe("Base transforms", function() {
+describe("Assertions", function() {
     it("does not transform assertions that aren't connected to expect()", function() {
         hopefor("foo").toBe("foo");
         hopefor("foo").not.toBe("bar");
