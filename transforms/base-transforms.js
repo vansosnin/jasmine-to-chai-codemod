@@ -19,9 +19,7 @@ export default function transformer(file, {jscodeshift: j}) {
         })
         .replaceWith(({value: node}) => {
             const fnCall = node.expression;
-            const [expectArg] = fnCall.callee.object.arguments
-                ? fnCall.callee.object.arguments
-                : fnCall.callee.object.object.arguments;
+            const [expectArg] = fnCall.callee.object.arguments;
 
             switch(fnCall.callee.property.name) {
                 case 'toBeFalsy':
