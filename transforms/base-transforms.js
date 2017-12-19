@@ -14,18 +14,54 @@ const expectPattern = {
     }
 };
 
+const expectNotPattern = {
+    expression: {
+        type: 'CallExpression',
+        callee: {
+            type: 'MemberExpression',
+            object: {
+                type: 'MemberExpression',
+                object: {
+                    type: 'CallExpression',
+                    callee: {
+                        type: 'Identifier',
+                        name: 'expect'
+                    }
+                },
+                property: {
+                    type: 'Identifier',
+                    name: 'not'
+                }
+            }
+        }
+    }
+};
+
 export default function transformer(file, {jscodeshift: j}) {
     const { statement } = j.template;
 
     return j(file.source)
-        .find(j.ExpressionStatement, expectPattern)
+        .find(j.ExpressionStatement, (node) => isExpect(node) || isExpectNot(node))
         .replaceWith(({value: node}) => {
             const fnCall = node.expression;
-            return transformExpect(fnCall, fnCall.callee.object.arguments)
+            if (isExpect(node)) {
+                return transformExpect(fnCall, fnCall.callee.object.arguments, {to: true})
+            }
+            else {
+                return transformExpect(fnCall, fnCall.callee.object.object.arguments, {to: false})
+            }
         })
         .toSource();
 
-    function transformExpect(fnCall, [expectArg]) {
+    function isExpect(node) {
+        return j.match(node, expectPattern);
+    }
+
+    function isExpectNot(node) {
+        return j.match(node, expectNotPattern);
+    }
+
+    function transformExpect(fnCall, [expectArg], {to}) {
         switch(fnCall.callee.property.name) {
             case 'toBeFalsy':
                 return statement`expect(${expectArg}).not.to.be.ok;`;
@@ -36,7 +72,7 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeDefined':
                 return statement`expect(${expectArg}).to.not.be.undefined;`;
             case 'toBeNull':
-                return statement`expect(${expectArg}).to.be.null;`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toThrow':
                 // toThrow()                          -> to.throw()                   (!!)
                 // toThrow("msg")                     -> to.throw("msg")
@@ -53,6 +89,10 @@ export default function transformer(file, {jscodeshift: j}) {
             default:
                 return node;
         }
+    }
+
+    function maybeNot(to) {
+        return to ? 'to' : 'not.to';
     }
 
     function toThrowArgs([arg]) {

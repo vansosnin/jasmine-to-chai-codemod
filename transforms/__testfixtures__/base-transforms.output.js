@@ -11,6 +11,7 @@ describe("Base transforms", function() {
 
     it("handles null", function() {
         expect(null).to.be.null;
+        expect(1234).not.to.be.null;
     });
 
     it("handles toThrowError()", function() {
