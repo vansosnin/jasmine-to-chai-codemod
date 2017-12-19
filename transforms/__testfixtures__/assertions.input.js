@@ -4,6 +4,10 @@ describe("Assertions", function() {
         hopefor("foo").not.toBe("bar");
     });
 
+    it("ignores unknown assertions", function() {
+        expect("foo").toLookLike("foobar");
+    });
+
     it("handles truthy and falsy", function() {
         expect("").toBeFalsy();
         expect(1).toBeTruthy();
