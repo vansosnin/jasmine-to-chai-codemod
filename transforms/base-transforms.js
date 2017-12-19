@@ -78,14 +78,14 @@ export default function transformer(file, {jscodeshift: j}) {
                 // toThrow("msg")                     -> to.throw("msg")
                 // toThrow(TypeError)                 -> to.throw(TypeError)
                 // toThrow(new TypeError("msg"))      -> to.throw(TypeError, "msg")
-                return transformThrow(expectArg, toThrowArgs(fnCall.arguments));
+                return transformThrow(expectArg, toThrowArgs(fnCall.arguments), {to});
             case 'toThrowError':
                 // toThrowError()                     -> to.throw(Error)              (!!)
                 // toThrowError("msg")                -> to.throw("msg")
                 // toThrowError(TypeError)            -> to.throw(TypeError)
                 // toThrowError(new TypeError("msg")) -> to.throw(TypeError, "msg")
                 // toThrowError(TypeError, "msg")     -> to.throw(TypeError, "msg")   (!!)
-                return transformThrow(expectArg, toThrowErrorArgs(fnCall.arguments));
+                return transformThrow(expectArg, toThrowErrorArgs(fnCall.arguments), {to});
             default:
                 return node;
         }
@@ -124,13 +124,13 @@ export default function transformer(file, {jscodeshift: j}) {
         }
     }
 
-    function transformThrow(expectArg, [errorType, msg]) {
+    function transformThrow(expectArg, [errorType, msg], {to}) {
         if (!errorType) {
-            return statement`expect(${expectArg}).to.throw();`;
+            return statement`expect(${expectArg}).${maybeNot(to)}.throw();`;
         } if (errorType && !msg) {
-            return statement`expect(${expectArg}).to.throw(${errorType});`;
+            return statement`expect(${expectArg}).${maybeNot(to)}.throw(${errorType});`;
         } else {
-            return statement`expect(${expectArg}).to.throw(${errorType}, ${msg});`;
+            return statement`expect(${expectArg}).${maybeNot(to)}.throw(${errorType}, ${msg});`;
         }
     }
 };

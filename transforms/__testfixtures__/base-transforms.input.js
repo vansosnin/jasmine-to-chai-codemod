@@ -24,6 +24,12 @@ describe("Base transforms", function() {
         expect(myFunc).toThrow(/Error pattern/);
         expect(myFunc).toThrow(TypeError);
         expect(myFunc).toThrow(new TypeError("Error message"));
+
+        expect(myFunc).not.toThrow();
+        expect(myFunc).not.toThrow("Error message");
+        expect(myFunc).not.toThrow(/Error pattern/);
+        expect(myFunc).not.toThrow(TypeError);
+        expect(myFunc).not.toThrow(new TypeError("Error message"));
     });
 
     it("handles toThrowError()", function() {
@@ -33,5 +39,12 @@ describe("Base transforms", function() {
         expect(myFunc).toThrowError(TypeError);
         expect(myFunc).toThrowError(new TypeError("Error message"));
         expect(myFunc).toThrowError(TypeError, "Error message");
+
+        expect(myFunc).not.toThrowError();
+        expect(myFunc).not.toThrowError("Error message");
+        expect(myFunc).not.toThrowError(/Error pattern/);
+        expect(myFunc).not.toThrowError(TypeError);
+        expect(myFunc).not.toThrowError(new TypeError("Error message"));
+        expect(myFunc).not.toThrowError(TypeError, "Error message");
     });
 });
