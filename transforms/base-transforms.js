@@ -64,9 +64,9 @@ export default function transformer(file, {jscodeshift: j}) {
     function transformExpect(fnCall, [expectArg], {to}) {
         switch(fnCall.callee.property.name) {
             case 'toBeFalsy':
-                return statement`expect(${expectArg}).not.to.be.ok;`;
+                return statement`expect(${expectArg}).${maybeNot(!to)}.be.ok;`;
             case 'toBeTruthy':
-                return statement`expect(${expectArg}).to.be.ok;`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.be.ok;`;
             case 'toBeUndefined':
                 return statement`expect(${expectArg}).to.be.undefined;`;
             case 'toBeDefined':

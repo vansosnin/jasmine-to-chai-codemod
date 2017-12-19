@@ -2,6 +2,8 @@ describe("Base transforms", function() {
     it("handles truthy and falsy", function() {
         expect("").toBeFalsy();
         expect(1).toBeTruthy();
+        expect({}).not.toBeFalsy();
+        expect(0).not.toBeTruthy();
     });
 
     it("handles undefined", function() {
