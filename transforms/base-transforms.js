@@ -4,13 +4,13 @@ export default function transformer(file, {jscodeshift: j}) {
     return j(file.source)
         .find(j.ExpressionStatement, {
             expression: {
-                type: j.CallExpression.name,
+                type: 'CallExpression',
                 callee: {
-                    type: j.MemberExpression.name,
+                    type: 'MemberExpression',
                     object: {
-                        type: j.CallExpression.name,
+                        type: 'CallExpression',
                         callee: {
-                            type: j.Identifier.name,
+                            type: 'Identifier',
                             name: 'expect'
                         }
                     }
@@ -74,7 +74,7 @@ export default function transformer(file, {jscodeshift: j}) {
     }
 
     function singleThrowArg(arg) {
-        if (arg.type === j.NewExpression.name) {
+        if (arg.type === 'NewExpression') {
             const {callee: errorType, arguments: [constructorArg]} = arg;
             return [errorType, constructorArg];
         } else {
