@@ -97,7 +97,12 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toEqual':
                 if (isJasmineAny(args[0])) {
                     const classVariable = args[0].arguments[0];
-                    return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
+                    const typeofString = toTypeofString(classVariable);
+                    if (typeofString) {
+                        return statement`expect(${expectArg}).${maybeNot(to)}.be.a(${typeofString});`;
+                    } else {
+                        return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
+                    }
                 } else {
                     return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
                 }
@@ -127,6 +132,21 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function isJasmineAny(node) {
         return j.match(node, jasmineAny);
+    }
+
+    // For String and Boolean, we use typeof check instead of instanceof
+    function toTypeofString({name}) {
+        const typeofMap = {
+            String: 'string',
+            Boolean: 'boolean'
+        };
+
+        if (typeofMap[name]) {
+            return {
+                type: 'Literal',
+                value: typeofMap[name],
+            };
+        }
     }
 
     function toThrowArgs([arg]) {
