@@ -61,6 +61,8 @@ export default function transformer(file, {jscodeshift: j}) {
     }
 
     function transformExpect(fnCall, [expectArg], {to}) {
+        const args = fnCall.arguments;
+
         switch(fnCall.callee.property.name) {
             case 'toBeFalsy':
                 return statement`expect(${expectArg}).${maybeNot(!to)}.be.ok;`;
@@ -73,26 +75,26 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toBe':
-                return statement`expect(${expectArg}).${maybeNot(to)}.equal(${fnCall.arguments[0]});`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.equal(${args[0]});`;
             case 'toEqual':
-                return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${fnCall.arguments[0]});`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
             case 'toMatch':
-                return statement`expect(${expectArg}).${maybeNot(to)}.match(${fnCall.arguments[0]});`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.match(${args[0]});`;
             case 'toContain':
-                return statement`expect(${expectArg}).${maybeNot(to)}.contain(${fnCall.arguments[0]});`;
+                return statement`expect(${expectArg}).${maybeNot(to)}.contain(${args[0]});`;
             case 'toThrow':
                 // toThrow()                          -> to.throw()                   (!!)
                 // toThrow("msg")                     -> to.throw("msg")
                 // toThrow(TypeError)                 -> to.throw(TypeError)
                 // toThrow(new TypeError("msg"))      -> to.throw(TypeError, "msg")
-                return transformThrow(expectArg, toThrowArgs(fnCall.arguments), {to});
+                return transformThrow(expectArg, toThrowArgs(args), {to});
             case 'toThrowError':
                 // toThrowError()                     -> to.throw(Error)              (!!)
                 // toThrowError("msg")                -> to.throw("msg")
                 // toThrowError(TypeError)            -> to.throw(TypeError)
                 // toThrowError(new TypeError("msg")) -> to.throw(TypeError, "msg")
                 // toThrowError(TypeError, "msg")     -> to.throw(TypeError, "msg")   (!!)
-                return transformThrow(expectArg, toThrowErrorArgs(fnCall.arguments), {to});
+                return transformThrow(expectArg, toThrowErrorArgs(args), {to});
         }
     }
 
