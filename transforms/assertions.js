@@ -37,6 +37,24 @@ const expectNotPattern = {
     }
 };
 
+const jasmineAny = {
+    type: 'CallExpression',
+    callee: {
+        type: 'MemberExpression',
+        object: {
+            type: 'Identifier',
+            name: 'jasmine'
+        },
+        property: {
+            type: 'Identifier',
+            name: 'any'
+        }
+    },
+    arguments: [{
+        type: 'Identifier'
+    }]
+};
+
 export default function transformer(file, {jscodeshift: j}) {
     const { statement } = j.template;
 
@@ -77,7 +95,12 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBe':
                 return statement`expect(${expectArg}).${maybeNot(to)}.equal(${args[0]});`;
             case 'toEqual':
-                return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
+                if (isJasmineAny(args[0])) {
+                    const classVariable = args[0].arguments[0];
+                    return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
+                } else {
+                    return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
+                }
             case 'toMatch':
                 return statement`expect(${expectArg}).${maybeNot(to)}.match(${args[0]});`;
             case 'toContain':
@@ -100,6 +123,10 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function maybeNot(to) {
         return to ? 'to' : 'not.to';
+    }
+
+    function isJasmineAny(node) {
+        return j.match(node, jasmineAny);
     }
 
     function toThrowArgs([arg]) {

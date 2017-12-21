@@ -37,6 +37,11 @@ describe("Assertions", function() {
         expect(foo).not.toEqual({foo: "baz"});
     });
 
+    it("converts toEqual(jasmine.any()) to instanceof check", function() {
+        expect(foo).toEqual(jasmine.any(Object));
+        expect(foo).not.toEqual(jasmine.any(MyClass));
+    });
+
     it("handles toMatch()", function() {
         expect("Hello world").toMatch(/Hello/);
         expect("Goodbye").not.toMatch(/Hello/);
