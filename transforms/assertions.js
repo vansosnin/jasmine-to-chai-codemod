@@ -93,7 +93,12 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toBe':
-                return statement`expect(${expectArg}).${maybeNot(to)}.equal(${args[0]});`;
+                const primitiveAssertion = builtinPrimitiveAssertion(args[0]);
+                if (primitiveAssertion) {
+                    return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
+                } else {
+                    return statement`expect(${expectArg}).${maybeNot(to)}.equal(${args[0]});`;
+                }
             case 'toEqual':
                 if (isJasmineAny(args[0])) {
                     const classVariable = args[0].arguments[0];
@@ -128,6 +133,19 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function maybeNot(to) {
         return to ? 'to' : 'not.to';
+    }
+
+    function builtinPrimitiveAssertion(node) {
+        if (j.match(node, {type: 'Identifier', name: 'undefined'})) {
+            return node;
+        }
+        if (
+            j.match(node, {type: 'Literal', value: null, raw: 'null'}) ||
+            j.match(node, {type: 'Literal', value: false, raw: 'false'}) ||
+            j.match(node, {type: 'Literal', value: true, raw: 'true'})
+        ) {
+            return {type: 'Identifier', name: node.raw};
+        }
     }
 
     function isJasmineAny(node) {

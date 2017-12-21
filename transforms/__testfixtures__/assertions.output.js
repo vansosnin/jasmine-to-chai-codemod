@@ -32,6 +32,13 @@ describe("Assertions", function() {
         expect(foo).not.to.equal(2);
     });
 
+    it("converts toBe(true/false/null/undefined) to more specific checks", function() {
+        expect(foo).to.be.true;
+        expect(foo).to.be.false;
+        expect(foo).not.to.be.null;
+        expect(foo).not.to.be.undefined;
+    });
+
     it("handles toEqual()", function() {
         expect(foo).to.deep.equal({foo: "bar"});
         expect(foo).not.to.deep.equal({foo: "baz"});
