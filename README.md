@@ -1,5 +1,7 @@
 # Jasmine to Chai Codemod
 
+[![Build Status](https://travis-ci.org/vansosnin/jasmine-to-chai-codemod.svg?branch=master)](https://travis-ci.org/vansosnin/jasmine-to-chai-codemod)
+
 Codemod for [jscodeshift] to migrate your tests from Jasmine to Chai syntax.
 
 ## Use case
