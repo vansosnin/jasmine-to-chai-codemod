@@ -93,12 +93,8 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toBe':
-                const primitiveAssertion = builtinPrimitiveAssertion(args[0]);
-                if (primitiveAssertion) {
-                    return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
-                } else {
-                    return statement`expect(${expectArg}).${maybeNot(to)}.equal(${args[0]});`;
-                }
+                return toPrimitiveAssertion(expectArg, args, {to}) ||
+                    toEqualityAssertion(expectArg, args, {to});
             case 'toEqual':
                 if (isJasmineAny(args[0])) {
                     const classVariable = args[0].arguments[0];
@@ -109,12 +105,8 @@ export default function transformer(file, {jscodeshift: j}) {
                         return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
                     }
                 } else {
-                    const primitiveAssertion = builtinPrimitiveAssertion(args[0]);
-                    if (primitiveAssertion) {
-                        return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
-                    } else {
-                        return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
-                    }
+                    return toPrimitiveAssertion(expectArg, args, {to}) ||
+                        toDeepEqualityAssertion(expectArg, args, {to});
                 }
             case 'toMatch':
                 return statement`expect(${expectArg}).${maybeNot(to)}.match(${args[0]});`;
@@ -142,6 +134,21 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function maybeNot(to) {
         return to ? 'to' : 'not.to';
+    }
+
+    function toPrimitiveAssertion(expectArg, [arg], {to}) {
+        const primitiveAssertion = builtinPrimitiveAssertion(arg);
+        if (primitiveAssertion) {
+            return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
+        }
+    }
+
+    function toEqualityAssertion(expectArg, [arg], {to}) {
+        return statement`expect(${expectArg}).${maybeNot(to)}.equal(${arg});`;
+    }
+
+    function toDeepEqualityAssertion(expectArg, [arg], {to}) {
+        return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${arg});`;
     }
 
     function builtinPrimitiveAssertion(node) {
