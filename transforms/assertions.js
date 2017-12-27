@@ -128,6 +128,10 @@ export default function transformer(file, {jscodeshift: j}) {
                 // toThrowError(new TypeError("msg")) -> to.throw(TypeError, "msg")
                 // toThrowError(TypeError, "msg")     -> to.throw(TypeError, "msg")   (!!)
                 return transformThrow(expectArg, toThrowErrorArgs(args), {to});
+
+            // By default return nothing, so we can default back to the original AST node.
+            default:
+                return undefined;
         }
     }
 
