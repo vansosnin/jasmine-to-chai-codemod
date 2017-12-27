@@ -44,6 +44,13 @@ describe("Assertions", function() {
         expect(foo).not.toEqual({foo: "baz"});
     });
 
+    it("converts toEqual() with primitives to specific primitive checks", function() {
+        expect(foo).toEqual(true);
+        expect(foo).toEqual(false);
+        expect(foo).not.toEqual(null);
+        expect(foo).not.toEqual(undefined);
+    });
+
     it("converts toEqual(jasmine.any()) to instanceof or type check", function() {
         expect(true).toEqual(jasmine.any(Boolean));
         expect("ho").toEqual(jasmine.any(String));

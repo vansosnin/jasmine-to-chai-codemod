@@ -44,6 +44,13 @@ describe("Assertions", function() {
         expect(foo).not.to.deep.equal({foo: "baz"});
     });
 
+    it("converts toEqual() with primitives to specific primitive checks", function() {
+        expect(foo).to.be.true;
+        expect(foo).to.be.false;
+        expect(foo).not.to.be.null;
+        expect(foo).not.to.be.undefined;
+    });
+
     it("converts toEqual(jasmine.any()) to instanceof or type check", function() {
         expect(true).to.be.a("boolean");
         expect("ho").to.be.a("string");

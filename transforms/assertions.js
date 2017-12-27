@@ -109,7 +109,12 @@ export default function transformer(file, {jscodeshift: j}) {
                         return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
                     }
                 } else {
-                    return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
+                    const primitiveAssertion = builtinPrimitiveAssertion(args[0]);
+                    if (primitiveAssertion) {
+                        return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
+                    } else {
+                        return statement`expect(${expectArg}).${maybeNot(to)}.deep.equal(${args[0]});`;
+                    }
                 }
             case 'toMatch':
                 return statement`expect(${expectArg}).${maybeNot(to)}.match(${args[0]});`;
