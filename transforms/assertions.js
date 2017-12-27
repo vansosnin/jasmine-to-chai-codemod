@@ -93,7 +93,7 @@ export default function transformer(file, {jscodeshift: j}) {
             case 'toBeNull':
                 return statement`expect(${expectArg}).${maybeNot(to)}.be.null;`;
             case 'toBe':
-                return toPrimitiveAssertion(expectArg, args, {to}) ||
+                return maybeToPrimitiveAssertion(expectArg, args, {to}) ||
                     toEqualityAssertion(expectArg, args, {to});
             case 'toEqual':
                 if (isJasmineAny(args[0])) {
@@ -105,8 +105,8 @@ export default function transformer(file, {jscodeshift: j}) {
                         return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
                     }
                 } else {
-                    return toPrimitiveAssertion(expectArg, args, {to}) ||
-                        toPlainEqualityAssertion(expectArg, args, {to}) ||
+                    return maybeToPrimitiveAssertion(expectArg, args, {to}) ||
+                        maybeToEqualityAssertion(expectArg, args, {to}) ||
                         toDeepEqualityAssertion(expectArg, args, {to});
                 }
             case 'toMatch':
@@ -137,14 +137,14 @@ export default function transformer(file, {jscodeshift: j}) {
         return to ? 'to' : 'not.to';
     }
 
-    function toPrimitiveAssertion(expectArg, [arg], {to}) {
+    function maybeToPrimitiveAssertion(expectArg, [arg], {to}) {
         const primitiveAssertion = builtinPrimitiveAssertion(arg);
         if (primitiveAssertion) {
             return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
         }
     }
 
-    function toPlainEqualityAssertion(expectArg, [arg], {to}) {
+    function maybeToEqualityAssertion(expectArg, [arg], {to}) {
         if (arg.type === 'Literal' && (typeof arg.value === 'number' || typeof arg.value === 'string')) {
             return toEqualityAssertion(expectArg, [arg], {to});
         }
