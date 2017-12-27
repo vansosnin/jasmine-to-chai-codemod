@@ -96,19 +96,10 @@ export default function transformer(file, {jscodeshift: j}) {
                 return maybeToPrimitiveAssertion(expectArg, args, {to}) ||
                     toEqualityAssertion(expectArg, args, {to});
             case 'toEqual':
-                if (isJasmineAny(args[0])) {
-                    const classVariable = args[0].arguments[0];
-                    const typeofString = toTypeofString(classVariable);
-                    if (typeofString) {
-                        return statement`expect(${expectArg}).${maybeNot(to)}.be.a(${typeofString});`;
-                    } else {
-                        return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
-                    }
-                } else {
-                    return maybeToPrimitiveAssertion(expectArg, args, {to}) ||
-                        maybeToEqualityAssertion(expectArg, args, {to}) ||
-                        toDeepEqualityAssertion(expectArg, args, {to});
-                }
+                return maybeToTypeAssertion(expectArg, args, {to}) ||
+                    maybeToPrimitiveAssertion(expectArg, args, {to}) ||
+                    maybeToEqualityAssertion(expectArg, args, {to}) ||
+                    toDeepEqualityAssertion(expectArg, args, {to});
             case 'toMatch':
                 return statement`expect(${expectArg}).${maybeNot(to)}.match(${args[0]});`;
             case 'toContain':
@@ -135,6 +126,18 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function maybeNot(to) {
         return to ? 'to' : 'not.to';
+    }
+
+    function maybeToTypeAssertion(expectArg, [arg], {to}) {
+        if (isJasmineAny(arg)) {
+            const classVariable = arg.arguments[0];
+            const typeofString = toTypeofString(classVariable);
+            if (typeofString) {
+                return statement`expect(${expectArg}).${maybeNot(to)}.be.a(${typeofString});`;
+            } else {
+                return statement`expect(${expectArg}).${maybeNot(to)}.be.an.instanceof(${classVariable});`;
+            }
+        }
     }
 
     function maybeToPrimitiveAssertion(expectArg, [arg], {to}) {
