@@ -51,6 +51,11 @@ describe("Assertions", function() {
         expect(foo).not.to.be.undefined;
     });
 
+    it("converts toEqual() with plain numbers and strings to non-deep checks", function() {
+        expect(foo).to.equal(123);
+        expect(foo).not.to.equal("Hello");
+    });
+
     it("converts toEqual(jasmine.any()) to instanceof or type check", function() {
         expect(true).to.be.a("boolean");
         expect("ho").to.be.a("string");

@@ -106,6 +106,7 @@ export default function transformer(file, {jscodeshift: j}) {
                     }
                 } else {
                     return toPrimitiveAssertion(expectArg, args, {to}) ||
+                        toPlainEqualityAssertion(expectArg, args, {to}) ||
                         toDeepEqualityAssertion(expectArg, args, {to});
                 }
             case 'toMatch':
@@ -140,6 +141,12 @@ export default function transformer(file, {jscodeshift: j}) {
         const primitiveAssertion = builtinPrimitiveAssertion(arg);
         if (primitiveAssertion) {
             return statement`expect(${expectArg}).${maybeNot(to)}.be.${primitiveAssertion};`;
+        }
+    }
+
+    function toPlainEqualityAssertion(expectArg, [arg], {to}) {
+        if (arg.type === 'Literal' && (typeof arg.value === 'number' || typeof arg.value === 'string')) {
+            return toEqualityAssertion(expectArg, [arg], {to});
         }
     }
 
