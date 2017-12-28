@@ -110,4 +110,18 @@ describe("Assertions", function() {
         expect(myFunc).not.toThrowError(new TypeError("Error message"));
         expect(myFunc).not.toThrowError(TypeError, "Error message");
     });
+
+    it("preserves comments", function() {
+        /**
+         * larger comment block
+         */
+        expect(1).toBe(1); // line comment
+        // another line
+        expect(2).not.toBe(1);
+        // more
+        // in
+        // the
+        // end
+        // ...
+    });
 });

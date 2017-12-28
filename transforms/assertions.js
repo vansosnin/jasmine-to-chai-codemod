@@ -63,9 +63,9 @@ export default function transformer(file, {jscodeshift: j}) {
         .replaceWith(({value: node}) => {
             const fnCall = node.expression;
             if (isExpect(node)) {
-                return transformExpect(fnCall, fnCall.callee.object.arguments, {to: true}) || node;
+                return copyComments(node, transformExpect(fnCall, fnCall.callee.object.arguments, {to: true})) || node;
             } else {
-                return transformExpect(fnCall, fnCall.callee.object.object.arguments, {to: false}) || node;
+                return copyComments(node, transformExpect(fnCall, fnCall.callee.object.object.arguments, {to: false})) || node;
             }
         })
         .toSource();
@@ -76,6 +76,13 @@ export default function transformer(file, {jscodeshift: j}) {
 
     function isExpectNot(node) {
         return j.match(node, expectNotPattern);
+    }
+
+    function copyComments(node1, node2) {
+        if (node1 && node2 && node1.comments) {
+            node2.comments = node1.comments;
+        }
+        return node2;
     }
 
     function transformExpect(fnCall, [expectArg], {to}) {
